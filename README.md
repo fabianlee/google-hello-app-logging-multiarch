@@ -1,16 +1,17 @@
-# 
+#  google-hello-app-logging-multiarch
 
 This project is directly based on the code from the [GoogleCloudPlatform/kubernetes-engine-samples/quickstarts/hello-app](https://github.com/GoogleCloudPlatform/kubernetes-engine-samples/tree/main/quickstarts/hello-app)
 
 The enhancement in this project is building this GoLang app with multiple architectural targets, so that it can also run on ARM64, specifically Apple Silicon as well as AMD64.
 
+Also, it logs INFO, WARN, and ERROR level messages every second for testing logging systems.  The message it sends can be modified based on passing the environment parameter 'whoAmI'.
+
 ## Github pipeline and published image
 
 The github pipeline takes care of the multi-arch build, and publishes the image to the Github Container Registry.
 
-
 ```
-docker pull ghcr.io/fabianlee/google-hello-app-logging-multiarch:1.0
+docker pull ghcr.io/fabianlee/google-hello-app-logging-multiarch:latest
 ```
 
 ## Creating tag that invokes Github Action
