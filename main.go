@@ -64,9 +64,9 @@ func hello(w http.ResponseWriter, r *http.Request) {
 func runDataLoop() {
     for {
         loopIndex++
-	slog.Info("logging at info level",whoAmI)
-	slog.Warn("logging at warn level",whoAmI)
-	slog.Error("logging at err level",whoAmI)
+	slog.Info("logging at info level",loopIndex,whoAmI)
+	slog.Warn("logging at warn level",loopIndex,whoAmI)
+	slog.Error("logging at err level",loopIndex,whoAmI)
         time.Sleep(1 * time.Second)
     }
 }
