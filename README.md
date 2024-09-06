@@ -4,7 +4,15 @@ This project is directly based on the code from the [GoogleCloudPlatform/kuberne
 
 The enhancement in this project is building this GoLang app with multiple architectural targets, so that it can also run on ARM64, specifically Apple Silicon as well as AMD64.
 
-Also, it logs INFO, WARN, and ERROR level messages every second for testing logging systems.  The message it sends can be modified based on passing the environment parameter 'whoAmI'.
+Also, it logs INFO, WARN, and ERROR level messages every 10 seconds for testing logging systems.  The message it sends can be modified based on passing the environment parameter 'whoAmI'.
+
+## GoLang syntax check
+
+If you have [GoLang installed locally](https://fabianlee.org/2022/10/29/golang-installing-the-go-programming-language-on-ubuntu-22-04/), you can run a build sanity check on the main.go program before having the pipeline do a full build.
+
+```
+make local-golang
+```
 
 ## Github pipeline and published image
 
