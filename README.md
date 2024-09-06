@@ -38,3 +38,11 @@ todel=v1.0.1
 git tag -d $todel && git push -d origin $todel
 ```
 
+## Deploying to Kubernetes cluster
+
+If you want to test this container image from a Kubernetes cluster, you can use the example manifest provided.
+
+```
+kubectl apply -f golang-hello-world-web-logging.yaml
+```
+
