@@ -27,6 +27,9 @@ import (
 	"time"
 )
 
+// wait time between logging messages
+const SECONDS_SLEEP = 10
+
 var loopIndex int64 = 0
 var whoAmI string = "world"
 
@@ -61,13 +64,14 @@ func hello(w http.ResponseWriter, r *http.Request) {
 	fmt.Fprintf(w, "Hello, %s!\n",whoAmI)
 }
 
+// infinite loop, log messages at different levels every 10 seconds
 func runDataLoop() {
     for {
         loopIndex++
 	slog.Info("logging at info level", slog.Int64("loopIndex",loopIndex), slog.String("whoAmI",whoAmI))
 	slog.Warn("logging at warn level", slog.Int64("loopIndex",loopIndex), slog.String("whoAmI",whoAmI))
 	slog.Error("logging at err level", slog.Int64("loopIndex",loopIndex), slog.String("whoAmI",whoAmI))
-        time.Sleep(1 * time.Second)
+        time.Sleep(SECONDS_SLEEP * time.Second)
     }
 }
 
