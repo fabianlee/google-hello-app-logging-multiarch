@@ -34,6 +34,7 @@ PROVENANCE_FLAG= --provenance=false
 BUILD_TIME := $(shell date -u '+%Y-%m-%d_%H:%M:%S')
 GITREF := $(shell git rev-parse --short HEAD)
 
+# simulate kubernetes spec.containers.env variable 'whoAmI' being set
 K8S_ENV_ARGS := -e whoAmI=$(shell hostname)
 
 ## builds multi-arch docker image using OCI image manifest
