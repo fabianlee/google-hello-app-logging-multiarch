@@ -1,6 +1,6 @@
 OWNER := fabianlee
 PROJECT := google-hello-app-logging-multiarch
-VERSION := 1.0.2
+VERSION := 1.0.4
 
 # OCI image index schema (not supported by older container registry servers)
 # https://github.com/opencontainers/image-spec/blob/main/manifest.md
@@ -64,6 +64,13 @@ docker-multi-arch-push-dockerv22:
 	chmod 755 regctl
 	./regctl image mod $(OPV) --to-docker --create $(OPV22)
 	$(DOCKERCMD) manifest inspect $(OPV22) | head
+
+## local golang syntax check
+## https://fabianlee.org/2022/10/29/golang-installing-the-go-programming-language-on-ubuntu-22-04/
+local-golang:
+	go version
+	mkdir -p dist
+	CGO_ENABLED=0 go build -o dist/out main.go
 
 ## local builds of specific target platforms
 docker-build-run-amd64:
