@@ -34,6 +34,10 @@ var loopIndex int64 = 0
 var whoAmI string = "world"
 
 func main() {
+        // slog by default sends to stderr, switching to stdout
+	// so that GCP Logs Explorer does not capture at error level
+        logger := slog.New(slog.NewTextHandler(os.Stdout, nil))
+        slog.SetDefault(logger)
         //log.SetFlags(log.Ldate);
 
 	// any override?
@@ -68,9 +72,12 @@ func hello(w http.ResponseWriter, r *http.Request) {
 func runDataLoop() {
     for {
         loopIndex++
-	slog.Info("logging at info level", slog.Int64("loopIndex",loopIndex), slog.String("whoAmI",whoAmI))
-	slog.Warn("logging at warn level", slog.Int64("loopIndex",loopIndex), slog.String("whoAmI",whoAmI))
-	slog.Error("logging at err level", slog.Int64("loopIndex",loopIndex), slog.String("whoAmI",whoAmI))
+	//slog.Info("logging at info level", slog.Int64("loopIndex",loopIndex), slog.String("whoAmI",whoAmI))
+	//slog.Warn("logging at warn level", slog.Int64("loopIndex",loopIndex), slog.String("whoAmI",whoAmI))
+	//slog.Error("logging at err level", slog.Int64("loopIndex",loopIndex), slog.String("whoAmI",whoAmI))
+	slog.Info("logging at info level", "loopIndex",loopIndex, "whoAmI",whoAmI)
+	slog.Warn("logging at info level", "loopIndex",loopIndex, "whoAmI",whoAmI)
+	slog.Error("logging at info level", "loopIndex",loopIndex, "whoAmI",whoAmI)
         time.Sleep(SECONDS_SLEEP * time.Second)
     }
 }
