@@ -34,9 +34,9 @@ spec:
 
         env:
 
-        # override default log type (default=json)
+        # override default log type: json|line
         - name: logType
-          value: "line"
+          value: json
 
         # override default message
         - name: whoAmI
@@ -52,14 +52,14 @@ spec:
             path: /healthz
             port: 8080
           initialDelaySeconds: 3
-          periodSeconds: 3
+          periodSeconds: 5
 
         readinessProbe:
           httpGet:
             path: /healthz
             port: 8080
           initialDelaySeconds: 3
-          periodSeconds: 3
+          periodSeconds: 5
 
       restartPolicy: Always
 ---
