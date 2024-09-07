@@ -77,9 +77,9 @@ func main() {
 func hello(w http.ResponseWriter, r *http.Request) {
 	log.Printf("Serving request: %s", r.URL.Path)
 	dt := time.Now()
-	fmt.Printf("%s %s Serving request: %s", dt.Format(time.RFC3339),"INFO",r.URL.Path)
-	fmt.Printf("%s %s Serving request: %s", dt.Format(time.RFC3339),"WARN",r.URL.Path)
-	fmt.Printf("%s %s Serving request: %s", dt.Format(time.RFC3339),"ERROR",r.URL.Path)
+	fmt.Printf("%s %s Serving request: %s\n", dt.Format(time.RFC3339),"INFO",r.URL.Path)
+	fmt.Printf("%s %s Serving request: %s\n", dt.Format(time.RFC3339),"WARN",r.URL.Path)
+	fmt.Printf("%s %s Serving request: %s\n", dt.Format(time.RFC3339),"ERROR",r.URL.Path)
 	fmt.Fprintf(w, "Hello, %s!\n",whoAmI)
 }
 
@@ -88,8 +88,6 @@ func runDataLoop() {
     for {
         loopIndex++
 	//slog.Info("logging at info level", slog.Int64("loopIndex",loopIndex), slog.String("whoAmI",whoAmI))
-	//slog.Warn("logging at warn level", slog.Int64("loopIndex",loopIndex), slog.String("whoAmI",whoAmI))
-	//slog.Error("logging at err level", slog.Int64("loopIndex",loopIndex), slog.String("whoAmI",whoAmI))
 	slog.Info("logging at info level", "severity","INFO", "loopIndex",loopIndex, "whoAmI",whoAmI)
 	slog.Warn("logging at info level", "severity","WARN", "loopIndex",loopIndex, "whoAmI",whoAmI)
 	slog.Error("logging at info level", "severity","ERROR", "loopIndex",loopIndex, "whoAmI",whoAmI)
