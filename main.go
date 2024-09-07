@@ -84,8 +84,8 @@ func hello(w http.ResponseWriter, r *http.Request) {
 	//fmt.Printf("%s %s Serving request: %s\n", "INFO",dt.Format(time.RFC3339),r.URL.Path)
 	//fmt.Printf("%s %s Serving request: %s\n", "WARN",dt.Format(time.RFC3339),r.URL.Path)
 	//fmt.Printf("%s %s Serving request: %s\n", "ERROR",dt.Format(time.RFC3339),r.URL.Path)
-	stdoutLog.Printf("stdout logging request: ",r.URL.Path)
-	stderrLog.Printf("stderr Serving request: ",r.URL.Path)
+	stdoutLog.Printf("stdout logging request: %s\n",r.URL.Path)
+	stderrLog.Printf("stderr Serving request: %s\n",r.URL.Path)
 	fmt.Fprintf(w, "Hello, %s!\n",whoAmI)
 }
 
