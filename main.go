@@ -34,21 +34,21 @@ var logType = "json"
 var loopIndex int64 = 0
 var whoAmI string = "world"
 
+// for unstructured output
 var stdoutLog = log.New(os.Stdout, "", 1)
 var stderrLog = log.New(os.Stderr, "", 1)
 
+// for structured output
+// slog by default sends to stderr, switching to stdout
+var line_logger = slog.New(slog.NewTextHandler(os.Stdout, nil))
+var json_logger = slog.New(slog.NewJSONHandler(os.Stdout, nil))
+
 func main() {
-        
 
-        // slog by default sends to stderr, switching to stdout
-	// so that GCP Logs Explorer does not capture at error level
-
-	// override log type? (default=json)
+	// override structured log output? (default=json)
 	if os.Getenv("logType") != "" {
 	   logType = os.Getenv("logType")
 	}
-	line_logger := slog.New(slog.NewTextHandler(os.Stdout, nil))
-        json_logger := slog.New(slog.NewJSONHandler(os.Stdout, nil))
 	if logType == "json" {
           slog.SetDefault(json_logger)
 	}else {
@@ -59,10 +59,10 @@ func main() {
 	if os.Getenv("whoAmI") != "" {
 	   whoAmI = os.Getenv("whoAmI")
 	}
-        // run log message once a second
+        // send log messages once a second
 	go runDataLoop()
 
-	// register hello function to handle all requests
+	// register hello function to handle all web requests
 	mux := http.NewServeMux()
 	mux.HandleFunc("/", hello)
 
@@ -79,17 +79,15 @@ func main() {
 
 // hello responds to the request with a plain-text "Hello, world" message.
 func hello(w http.ResponseWriter, r *http.Request) {
-	log.Printf("Serving request: ", r.URL.Path)
-	//dt := time.Now()
-	//fmt.Printf("%s %s Serving request: %s\n", "INFO",dt.Format(time.RFC3339),r.URL.Path)
-	//fmt.Printf("%s %s Serving request: %s\n", "WARN",dt.Format(time.RFC3339),r.URL.Path)
-	//fmt.Printf("%s %s Serving request: %s\n", "ERROR",dt.Format(time.RFC3339),r.URL.Path)
+        // send request info to stdout and stderr as test of unstructured
 	stdoutLog.Printf("stdout logging request: %s\n",r.URL.Path)
 	stderrLog.Printf("stderr Serving request: %s\n",r.URL.Path)
+
+	// web response to end user
 	fmt.Fprintf(w, "Hello, %s!\n",whoAmI)
 }
 
-// infinite loop, log messages at different levels every 10 seconds
+// infinite loop, log structured messages at different levels every 10 seconds
 func runDataLoop() {
     for {
         loopIndex++
