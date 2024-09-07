@@ -34,6 +34,10 @@ spec:
 
         env:
 
+        # override default log type (default=json)
+        - name: logType
+          value: "line"
+
         # override default message
         - name: whoAmI
           #value: "mypod"

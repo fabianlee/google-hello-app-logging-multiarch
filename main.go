@@ -30,16 +30,26 @@ import (
 // wait time between logging messages
 const SECONDS_SLEEP = 10
 
+var logType = "json"
 var loopIndex int64 = 0
 var whoAmI string = "world"
 
 func main() {
+
         // slog by default sends to stderr, switching to stdout
 	// so that GCP Logs Explorer does not capture at error level
-	//logger := slog.New(slog.NewTextHandler(os.Stdout, nil))
-        logger := slog.New(slog.NewJSONHandler(os.Stdout, nil))
-        slog.SetDefault(logger)
-        //log.SetFlags(log.Ldate);
+
+	// override log type? (default=json)
+	if os.Getenv("logType") != "" {
+	   logType = os.Getenv("logType")
+	}
+	line_logger := slog.New(slog.NewTextHandler(os.Stdout, nil))
+        json_logger := slog.New(slog.NewJSONHandler(os.Stdout, nil))
+	if logType == "json" {
+          slog.SetDefault(json_logger)
+	}else {
+	  slog.SetDefault(line_logger)
+	}
 
 	// any override?
 	if os.Getenv("whoAmI") != "" {
@@ -66,6 +76,10 @@ func main() {
 // hello responds to the request with a plain-text "Hello, world" message.
 func hello(w http.ResponseWriter, r *http.Request) {
 	log.Printf("Serving request: %s", r.URL.Path)
+	dt := time.Now()
+	fmt.Printf("%s %s Serving request: %s", dt.Format(time.RFC3339),"INFO",r.URL.Path)
+	fmt.Printf("%s %s Serving request: %s", dt.Format(time.RFC3339),"WARN",r.URL.Path)
+	fmt.Printf("%s %s Serving request: %s", dt.Format(time.RFC3339),"ERROR",r.URL.Path)
 	fmt.Fprintf(w, "Hello, %s!\n",whoAmI)
 }
 
