@@ -76,10 +76,12 @@ func main() {
 // hello responds to the request with a plain-text "Hello, world" message.
 func hello(w http.ResponseWriter, r *http.Request) {
 	log.Printf("Serving request: %s", r.URL.Path)
-	dt := time.Now()
-	fmt.Printf("%s %s Serving request: %s\n", "INFO",dt.Format(time.RFC3339),r.URL.Path)
-	fmt.Printf("%s %s Serving request: %s\n", "WARN",dt.Format(time.RFC3339),r.URL.Path)
-	fmt.Printf("%s %s Serving request: %s\n", "ERROR",dt.Format(time.RFC3339),r.URL.Path)
+	//dt := time.Now()
+	//fmt.Printf("%s %s Serving request: %s\n", "INFO",dt.Format(time.RFC3339),r.URL.Path)
+	//fmt.Printf("%s %s Serving request: %s\n", "WARN",dt.Format(time.RFC3339),r.URL.Path)
+	//fmt.Printf("%s %s Serving request: %s\n", "ERROR",dt.Format(time.RFC3339),r.URL.Path)
+	log.Printf("Serving request1: ",r.URL.Path)
+	fmt.Printf("Serving request2: %s\n",r.URL.Path)
 	fmt.Fprintf(w, "Hello, %s!\n",whoAmI)
 }
 
