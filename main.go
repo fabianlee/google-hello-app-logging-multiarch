@@ -82,6 +82,7 @@ func hello(w http.ResponseWriter, r *http.Request) {
 	//fmt.Printf("%s %s Serving request: %s\n", "ERROR",dt.Format(time.RFC3339),r.URL.Path)
 	log.Printf("Serving request1: ",r.URL.Path)
 	fmt.Printf("Serving request2: %s\n",r.URL.Path)
+	fmt.Printf("WARN Serving request3: %s\n",r.URL.Path)
 	fmt.Fprintf(w, "Hello, %s!\n",whoAmI)
 }
 
