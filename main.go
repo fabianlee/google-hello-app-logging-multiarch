@@ -34,7 +34,11 @@ var logType = "json"
 var loopIndex int64 = 0
 var whoAmI string = "world"
 
+var stdoutLog = log.New(os.Stdout, "", 1)
+var stderrLog = log.New(os.Stderr, "", 1)
+
 func main() {
+        
 
         // slog by default sends to stderr, switching to stdout
 	// so that GCP Logs Explorer does not capture at error level
@@ -75,14 +79,13 @@ func main() {
 
 // hello responds to the request with a plain-text "Hello, world" message.
 func hello(w http.ResponseWriter, r *http.Request) {
-	log.Printf("Serving request: %s", r.URL.Path)
+	log.Printf("Serving request: ", r.URL.Path)
 	//dt := time.Now()
 	//fmt.Printf("%s %s Serving request: %s\n", "INFO",dt.Format(time.RFC3339),r.URL.Path)
 	//fmt.Printf("%s %s Serving request: %s\n", "WARN",dt.Format(time.RFC3339),r.URL.Path)
 	//fmt.Printf("%s %s Serving request: %s\n", "ERROR",dt.Format(time.RFC3339),r.URL.Path)
-	log.Printf("Serving request1: ",r.URL.Path)
-	fmt.Printf("Serving request2: %s\n",r.URL.Path)
-	fmt.Printf("WARN Serving request3: %s\n",r.URL.Path)
+	stdoutLog.Printf("stdout logging request: ",r.URL.Path)
+	stderrLog.Printf("stderr Serving request: ",r.URL.Path)
 	fmt.Fprintf(w, "Hello, %s!\n",whoAmI)
 }
 

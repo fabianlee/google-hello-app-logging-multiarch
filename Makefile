@@ -1,6 +1,6 @@
 OWNER := fabianlee
 PROJECT := google-hello-app-logging-multiarch
-VERSION := 1.0.12
+VERSION := 1.0.13
 
 # OCI image index schema (not supported by older container registry servers)
 # https://github.com/opencontainers/image-spec/blob/main/manifest.md
