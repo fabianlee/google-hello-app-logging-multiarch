@@ -26,6 +26,8 @@ import (
 	"os"
 	"time"
 )
+// ldflags passed via Docker build-arg
+var Version = "n/a"
 
 // wait time between logging messages
 const SECONDS_SLEEP = 10
@@ -73,7 +75,7 @@ func main() {
 	}
 
 	// start the web server on port and accept requests
-	log.Printf("Server listening on port %s", port)
+	log.Printf("Server %s listening on port %s", Version, port)
 	log.Fatal(http.ListenAndServe(":"+port, mux))
 }
 

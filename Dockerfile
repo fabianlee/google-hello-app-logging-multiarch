@@ -17,7 +17,8 @@ FROM golang:1.23.1-alpine3.20 AS builder
 WORKDIR /app
 RUN go mod init hello-app
 COPY *.go ./
-RUN CGO_ENABLED=0 GOOS=linux go build -o /hello-app
+ARG MY_VERSION=0.1
+RUN CGO_ENABLED=0 GOOS=linux go build -ldflags "-X main.Version=${MY_VERSION}" -o /hello-app
 
 FROM gcr.io/distroless/base-debian12
 WORKDIR /
