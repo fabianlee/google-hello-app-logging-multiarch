@@ -79,4 +79,4 @@ spec:
     targetPort: 8080
     protocol: TCP
   selector:
-    app: golang-hello-world-web
+    app: golang-hello-world-web-logging
