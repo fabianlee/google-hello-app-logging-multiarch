@@ -130,4 +130,4 @@ jobs:
           scanners: vuln # no need for 'secret'
           vuln-type: 'os,library'
           severity: 'CRITICAL,HIGH'
-          github-pat: ${{ secrets.GITHUB_TOKEN }}
+          github-pat: ${{ secrets.pat_for_snapshot }}
