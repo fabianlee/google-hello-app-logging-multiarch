@@ -136,4 +136,3 @@ jobs:
         with:
           name: trivy-report
           path: '${{ github.workspace }}/trivy-scan-results.txt'
-          retention-days: 365 # 90 is the default
