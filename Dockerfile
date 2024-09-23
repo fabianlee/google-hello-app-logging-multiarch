@@ -22,7 +22,7 @@ ARG MY_VERSION=0.1
 RUN CGO_ENABLED=0 GOOS=linux go build -ldflags "-X main.Version=${MY_VERSION}" -o /hello-app
 
 #FROM gcr.io/distroless/base-debian12
-FROM debian:stable-20240904-slim
+FROM debian:bullseye-20240812-slim
 WORKDIR /
 COPY --from=builder /hello-app /hello-app
 ENV PORT=8080
