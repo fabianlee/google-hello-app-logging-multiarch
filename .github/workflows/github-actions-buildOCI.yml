@@ -21,10 +21,9 @@ jobs:
 
     # https://docs.github.com/en/actions/using-jobs/assigning-permissions-to-jobs
     permissions:
-      #contents: read # for actions/checkout
+      contents: read # for actions/checkout
       packages: write # for OCI build
-      contents: write # for scanning results
-      #security-events: write # for security reports
+      #contents: write # for scanning results added as pipeline artifact
 
     steps:
 
