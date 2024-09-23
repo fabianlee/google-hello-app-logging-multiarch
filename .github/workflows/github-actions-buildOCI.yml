@@ -23,6 +23,7 @@ jobs:
     permissions:
       contents: read # for actions/checkout
       packages: write # for OCI build
+      contents: write
       security-events: write # for security reports
 
     steps:
@@ -130,4 +131,10 @@ jobs:
           scanners: vuln # no need for 'secret'
           vuln-type: 'os,library'
           severity: 'CRITICAL,HIGH'
-          github-pat: ${{ secrets.pat_for_snapshot }}
+          #github-pat: ${{ secrets.pat_for_snapshot }}
+      - name: Upload trivy report as a Github artifact
+         uses: actions/upload-artifact@v4
+         with:
+           name: trivy-report
+           path: '${{ github.workspace }}/trivy-results.txt'
+           retention-days: 20 # 90 is the default
