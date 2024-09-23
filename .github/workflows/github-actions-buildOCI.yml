@@ -86,7 +86,7 @@ jobs:
       # tags and labels
       - name: Extract metadata (tags, labels) for image ${{ env.FULL_IMAGE_NAME }}
         id: meta
-        uses: docker/metadata-action@v4
+        uses: docker/metadata-action@v5
         with:
           # https://docs.github.com/en/actions/publishing-packages/publishing-docker-images
           images: |
@@ -123,14 +123,10 @@ jobs:
         uses: aquasecurity/trivy-action@0.24.0
         with:
           image-ref: ${{ env.GH_REGISTRY }}/${{ env.FULL_IMAGE_NAME }}:latest
-          format: sarif # 'table'
-          output: trivy-results.sarif
+          format: github # table # 'table'
+          output: trivy-results.txt
           exit-code: '1'
           ignore-unfixed: true
           scanners: vuln # no need for 'secret'
           vuln-type: 'os,library'
           severity: 'CRITICAL,HIGH'
-      - name: Upload Trivy scan results to GitHub Security tab
-        uses: github/codeql-action/upload-sarif@v3
-        with:
-          sarif_file: 'trivy-results.sarif'
