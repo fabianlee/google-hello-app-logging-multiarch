@@ -133,8 +133,8 @@ jobs:
           severity: 'CRITICAL,HIGH'
           #github-pat: ${{ secrets.pat_for_snapshot }}
       - name: Upload trivy report as a Github artifact
-         uses: actions/upload-artifact@v4
-         with:
-           name: trivy-report
-           path: '${{ github.workspace }}/trivy-results.txt'
-           retention-days: 20 # 90 is the default
+        uses: actions/upload-artifact@v4
+        with:
+          name: trivy-report
+          path: '${{ github.workspace }}/trivy-results.txt'
+          retention-days: 20 # 90 is the default
