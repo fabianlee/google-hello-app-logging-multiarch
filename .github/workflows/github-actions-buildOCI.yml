@@ -124,17 +124,16 @@ jobs:
         uses: aquasecurity/trivy-action@0.24.0
         with:
           image-ref: ${{ env.GH_REGISTRY }}/${{ env.FULL_IMAGE_NAME }}:latest
-          format: github # table # 'table'
+          format: table # 'table'
           output: trivy-results.txt
           exit-code: '1'
           ignore-unfixed: true
           scanners: vuln # no need for 'secret'
           vuln-type: 'os,library'
           severity: 'CRITICAL,HIGH'
-          #github-pat: ${{ secrets.pat_for_snapshot }}
       - name: Upload trivy report as a Github artifact
         uses: actions/upload-artifact@v4
         with:
           name: trivy-report
-          path: '${{ github.workspace }}/trivy-results.txt'
+          path: '${{ github.workspace }}/trivy-results.txt
           retention-days: 20 # 90 is the default
