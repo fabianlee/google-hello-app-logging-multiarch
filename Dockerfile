@@ -13,8 +13,8 @@
 # limitations under the License.
 
 # [START gke_quickstarts_hello_app_dockerfile]
-FROM golang:1.23.1-alpine3.20 AS builder
-#FROM golang:1.21.13-alpine3.19 AS builder # trivy will find HIGH vuln in 1.21
+#FROM golang:1.23.1-alpine3.20 AS builder
+FROM golang:1.21.13-alpine3.19 AS builder # trivy will find HIGH vuln in Go 1.21
 WORKDIR /app
 RUN go mod init hello-app
 COPY *.go ./
@@ -22,7 +22,7 @@ ARG MY_VERSION=0.1
 RUN CGO_ENABLED=0 GOOS=linux go build -ldflags "-X main.Version=${MY_VERSION}" -o /hello-app
 
 #FROM gcr.io/distroless/base-debian12
-FROM debian:bullseye-20240812-slim
+FROM debian:bullseye-20240812-slim # trivy will find HIGH vuln in older Debian dist
 WORKDIR /
 COPY --from=builder /hello-app /hello-app
 ENV PORT=8080
