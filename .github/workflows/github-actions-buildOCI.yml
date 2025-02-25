@@ -165,12 +165,18 @@ jobs:
 
     steps:
 
+      - name: Check out repository code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0 # all history for tags and branches, needed to resolve tag->branch name
+
       - name: Get changed files
         id: changed-files
         uses: tj-actions/changed-files@v45
         # To compare changes between the current commit and the last pushed remote commit set `since_last_remote_commit: true`. e.g
         # with:
         #   since_last_remote_commit: true
+        #
       - name: Find any helm chart files that have changed
         id: changed-files-yaml
         uses: tj-actions/changed-files@v45
