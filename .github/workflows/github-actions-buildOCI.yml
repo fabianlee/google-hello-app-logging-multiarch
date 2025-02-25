@@ -149,10 +149,8 @@ jobs:
 
 
   helm-package-and-publish-to-github:
-    # https://github.com/actions/runner-images
     runs-on: ubuntu-22.04
 
-    # https://docs.github.com/en/actions/using-jobs/assigning-permissions-to-jobs
     permissions:
       contents: write
       packages: write
@@ -167,10 +165,7 @@ jobs:
       - name: Get changed files
         id: changed-files
         uses: tj-actions/changed-files@v45
-        # To compare changes between the current commit and the last pushed remote commit set `since_last_remote_commit: true`. e.g
-        # with:
-        #   since_last_remote_commit: true
-        #
+
       - name: Find any helm chart files that have changed
         id: changed-files-yaml
         uses: tj-actions/changed-files@v45
@@ -189,11 +184,12 @@ jobs:
         run: |
           REPO_NAME=$(echo "${{ github.repository }}" | cut -d/ -f2)
           set -x
-          # list package tags (available image versions)
+          # list existing OCI image versions (from Package Registry)
           GHCR_TOKEN=$(echo ${{ secrets.GITHUB_TOKEN }} | base64)
           curl -H "Authorization: Bearer ${GHCR_TOKEN}" https://ghcr.io/v2/${{ github.repository_owner }}/$REPO_NAME/tags/list | tee versions.json
-          # customize helm chart appVersion to match latest OCI image tag in GitHub Package Registry
+          # do semantic sort on existing tags, get latest
           APP_VERSION=$(jq '.tags[]' versions.json -r | grep -v latest | sort -Vr | head -n1)
+          # customize helm chart appVersion to match latest OCI image tag in GitHub Package Registry
           sed -i "s/appVersion:.*/appVersion: \"$APP_VERSION\"/" charts/$REPO_NAME/Chart.yaml
 
       - name: Run chart-releaser
