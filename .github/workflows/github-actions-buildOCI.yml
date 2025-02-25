@@ -37,6 +37,7 @@ jobs:
         uses: actions/checkout@v4
         with:
           fetch-depth: 0 # all history for tags and branches, needed to resolve tag->branch name
+      - name: check git tags avail
         run: |
           git fetch --tags
           echo "==="
