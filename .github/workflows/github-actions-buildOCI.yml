@@ -102,36 +102,46 @@ jobs:
         run: echo -e "BUILD_TIME=$(date -u '+%Y-%m-%d_%H:%M:%S')\nGITREF=$(git rev-parse --short HEAD)" >> $GITHUB_OUTPUT
         id: get_buildargs
 
-      # build OCI image and push to Github Container Registry
-      - name: build and push docker image
-        uses: docker/build-push-action@v6
-        with:
-          context: .
-          push: true
-          platforms: linux/amd64,linux/arm64,linux/arm/v7
-          tags: ${{ steps.meta.outputs.tags }}
-          labels: ${{ steps.meta.outputs.labels }}
-          build-args: |
-            MY_VERSION=${{ fromJSON(steps.meta.outputs.json).labels['org.opencontainers.image.version'] }}
-            MY_BUILTBY=github-action
-            BUILD_TIME=${{ steps.get_buildargs.outputs.BUILD_TIME }}
-            GITREF=${{ steps.get_buildargs.outputs.GITREF }}
-            GITREF_long="${{ github.sha }}"
+      - name: Configure Git
+        run: |
+          git config user.name "$GITHUB_ACTOR"
+          git config user.email "$GITHUB_ACTOR@users.noreply.github.com"
 
-      - name: Run Trivy vulnerability scanner
-        uses: aquasecurity/trivy-action@0.24.0
-        with:
-          image-ref: ${{ env.GH_REGISTRY }}/${{ env.FULL_IMAGE_NAME }}:latest
-          format: table
-          output: trivy-scan-results.txt
-          exit-code: '0' # '1' would cause pipeline to fail if vulnerabilities found
-          ignore-unfixed: true
-          scanners: vuln
-          vuln-type: 'os,library'
-          severity: 'CRITICAL,HIGH,MEDIUM,LOW'
+      - name: Run chart-releaser
+        uses: helm/chart-releaser-action@v1.7.0
+        env:
+          CR_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
 
-      - name: Upload trivy report as a Github Action artifact
-        uses: actions/upload-artifact@v4
-        with:
-          name: trivy-report
-          path: '${{ github.workspace }}/trivy-scan-results.txt'
+#      # build OCI image and push to Github Container Registry
+#      - name: build and push docker image
+#        uses: docker/build-push-action@v6
+#        with:
+#          context: .
+#          push: true
+#          platforms: linux/amd64,linux/arm64,linux/arm/v7
+#          tags: ${{ steps.meta.outputs.tags }}
+#          labels: ${{ steps.meta.outputs.labels }}
+#          build-args: |
+#            MY_VERSION=${{ fromJSON(steps.meta.outputs.json).labels['org.opencontainers.image.version'] }}
+#            MY_BUILTBY=github-action
+#            BUILD_TIME=${{ steps.get_buildargs.outputs.BUILD_TIME }}
+#            GITREF=${{ steps.get_buildargs.outputs.GITREF }}
+#            GITREF_long="${{ github.sha }}"
+#
+#      - name: Run Trivy vulnerability scanner
+#        uses: aquasecurity/trivy-action@0.24.0
+#        with:
+#          image-ref: ${{ env.GH_REGISTRY }}/${{ env.FULL_IMAGE_NAME }}:latest
+#          format: table
+#          output: trivy-scan-results.txt
+#          exit-code: '0' # '1' would cause pipeline to fail if vulnerabilities found
+#          ignore-unfixed: true
+#          scanners: vuln
+#          vuln-type: 'os,library'
+#          severity: 'CRITICAL,HIGH,MEDIUM,LOW'
+#
+#      - name: Upload trivy report as a Github Action artifact
+#        uses: actions/upload-artifact@v4
+#        with:
+#          name: trivy-report
+#          path: '${{ github.workspace }}/trivy-scan-results.txt'

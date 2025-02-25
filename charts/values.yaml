@@ -1,0 +1,9 @@
+#image:
+#  repository: docker.io
+#  tag: v1.0.0
+
+extraEnvVars:
+  - name: whoami
+    value: this
+  - name: id
+    value: "2"
