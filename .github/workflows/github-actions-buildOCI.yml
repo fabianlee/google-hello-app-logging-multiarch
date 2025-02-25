@@ -4,8 +4,8 @@ run-name: Build OCI Image
 
 on:
   push:
-    #branches: ['master']
-    tags: ['v*']
+    branches: ['main']
+    #tags: ['v*']
   #pull_request:
   #  branches: ['master']
 
@@ -93,6 +93,7 @@ jobs:
       - name: Extract metadata (tags, labels) for image ${{ env.FULL_IMAGE_NAME }}
         id: meta
         uses: docker/metadata-action@v5
+        if: startsWith(github.event.ref, 'refs/tags/v')
         with:
           # https://docs.github.com/en/actions/publishing-packages/publishing-docker-images
           images: |
@@ -109,39 +110,42 @@ jobs:
         run: echo -e "BUILD_TIME=$(date -u '+%Y-%m-%d_%H:%M:%S')\nGITREF=$(git rev-parse --short HEAD)" >> $GITHUB_OUTPUT
         id: get_buildargs
 
-#      # build OCI image and push to Github Container Registry
-#      - name: build and push docker image
-#        uses: docker/build-push-action@v6
-#        with:
-#          context: .
-#          push: true
-#          platforms: linux/amd64,linux/arm64,linux/arm/v7
-#          tags: ${{ steps.meta.outputs.tags }}
-#          labels: ${{ steps.meta.outputs.labels }}
-#          build-args: |
-#            MY_VERSION=${{ fromJSON(steps.meta.outputs.json).labels['org.opencontainers.image.version'] }}
-#            MY_BUILTBY=github-action
-#            BUILD_TIME=${{ steps.get_buildargs.outputs.BUILD_TIME }}
-#            GITREF=${{ steps.get_buildargs.outputs.GITREF }}
-#            GITREF_long="${{ github.sha }}"
-#
-#      - name: Run Trivy vulnerability scanner
-#        uses: aquasecurity/trivy-action@0.24.0
-#        with:
-#          image-ref: ${{ env.GH_REGISTRY }}/${{ env.FULL_IMAGE_NAME }}:latest
-#          format: table
-#          output: trivy-scan-results.txt
-#          exit-code: '0' # '1' would cause pipeline to fail if vulnerabilities found
-#          ignore-unfixed: true
-#          scanners: vuln
-#          vuln-type: 'os,library'
-#          severity: 'CRITICAL,HIGH,MEDIUM,LOW'
-#
-#      - name: Upload trivy report as a Github Action artifact
-#        uses: actions/upload-artifact@v4
-#        with:
-#          name: trivy-report
-#          path: '${{ github.workspace }}/trivy-scan-results.txt'
+      # build OCI image and push to Github Container Registry
+      - name: build and push docker image
+        uses: docker/build-push-action@v6
+        if: startsWith(github.event.ref, 'refs/tags/v')
+        with:
+          context: .
+          push: true
+          platforms: linux/amd64,linux/arm64,linux/arm/v7
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
+          build-args: |
+            MY_VERSION=${{ fromJSON(steps.meta.outputs.json).labels['org.opencontainers.image.version'] }}
+            MY_BUILTBY=github-action
+            BUILD_TIME=${{ steps.get_buildargs.outputs.BUILD_TIME }}
+            GITREF=${{ steps.get_buildargs.outputs.GITREF }}
+            GITREF_long="${{ github.sha }}"
+
+      - name: Run Trivy vulnerability scanner
+        uses: aquasecurity/trivy-action@0.24.0
+        if: startsWith(github.event.ref, 'refs/tags/v')
+        with:
+          image-ref: ${{ env.GH_REGISTRY }}/${{ env.FULL_IMAGE_NAME }}:latest
+          format: table
+          output: trivy-scan-results.txt
+          exit-code: '0' # '1' would cause pipeline to fail if vulnerabilities found
+          ignore-unfixed: true
+          scanners: vuln
+          vuln-type: 'os,library'
+          severity: 'CRITICAL,HIGH,MEDIUM,LOW'
+
+      - name: Upload trivy report as a Github Action artifact
+        uses: actions/upload-artifact@v4
+        if: startsWith(github.event.ref, 'refs/tags/v')
+        with:
+          name: trivy-report
+          path: '${{ github.workspace }}/trivy-scan-results.txt'
 
 
   helm-package-and-publish-to-github:
@@ -188,13 +192,8 @@ jobs:
           # list package tags (available image versions)
           GHCR_TOKEN=$(echo ${{ secrets.GITHUB_TOKEN }} | base64)
           curl -H "Authorization: Bearer ${GHCR_TOKEN}" https://ghcr.io/v2/${{ github.repository_owner }}/$REPO_NAME/tags/list | tee versions.json
+          # customize helm chart appVersion to match latest OCI image tag in GitHub Package Registry
           APP_VERSION=$(jq '.tags[]' versions.json -r | grep -v latest | sort -Vr | head -n1)
-          #curl -L \
-          #-H "Accept: application/vnd.github+json" \
-          #-H "Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}" \
-          #-H "X-GitHub-Api-Version: 2022-11-28" \
-          #https://api.github.com/repos/${{ github.repository_owner }}/$REPO_NAME/packages?package_type=container
-          #https://api.github.com/repos/${{ github.repository_owner }}/$REPO_NAME/actions/artifacts
           sed -i "s/appVersion:.*/appVersion: \"$APP_VERSION\"/" charts/$REPO_NAME/Chart.yaml
 
       - name: Run chart-releaser
