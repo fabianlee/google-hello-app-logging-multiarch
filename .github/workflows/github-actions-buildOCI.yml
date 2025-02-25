@@ -21,8 +21,8 @@ jobs:
 
     # https://docs.github.com/en/actions/using-jobs/assigning-permissions-to-jobs
     permissions:
-      #contents: read # for actions/checkout
-      contents: write # for helm/chart-releaser-action
+      contents: read # for actions/checkout
+      #contents: write # for helm/chart-releaser-action
       packages: write # for OCI build
 
     steps:
@@ -103,15 +103,15 @@ jobs:
         run: echo -e "BUILD_TIME=$(date -u '+%Y-%m-%d_%H:%M:%S')\nGITREF=$(git rev-parse --short HEAD)" >> $GITHUB_OUTPUT
         id: get_buildargs
 
-      - name: Configure Git
-        run: |
-          git config user.name "$GITHUB_ACTOR"
-          git config user.email "$GITHUB_ACTOR@users.noreply.github.com"
-
-      - name: Run chart-releaser
-        uses: helm/chart-releaser-action@v1.7.0
-        env:
-          CR_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
+#      - name: Configure Git
+#        run: |
+#          git config user.name "$GITHUB_ACTOR"
+#          git config user.email "$GITHUB_ACTOR@users.noreply.github.com"
+#
+#      - name: Run chart-releaser
+#        uses: helm/chart-releaser-action@v1.7.0
+#        env:
+#          CR_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
 
 #      # build OCI image and push to Github Container Registry
 #      - name: build and push docker image
@@ -146,3 +146,34 @@ jobs:
 #        with:
 #          name: trivy-report
 #          path: '${{ github.workspace }}/trivy-scan-results.txt'
+
+
+  helm-package-and-publish-to-github:
+    # https://github.com/actions/runner-images
+    runs-on: ubuntu-22.04
+
+    # https://docs.github.com/en/actions/using-jobs/assigning-permissions-to-jobs
+    permissions:
+      contents: write
+      packages: write
+
+    steps:
+      - name: Configure Git
+        run: |
+          git config user.name "$GITHUB_ACTOR"
+          git config user.email "$GITHUB_ACTOR@users.noreply.github.com"
+
+      - name: Run chart-releaser
+        # https://github.com/helm/chart-releaser-action
+        #
+        # publishes helm index: https://fabianlee.github.io/google-hello-app-logging-multiarch/index.yaml
+        # helm repo add github-hello https://fabianlee.github.io/google-hello-app-logging-multiarch
+        # helm search repo -l github-hello
+        # helm template my-github-test github-hello/google-hello-app-logging-multiarch
+        #
+        # publishes tgz as github release: https://github.com/fabianlee/google-hello-app-logging-multiarch/releases/download/google-hello-app-logging-multiarch-0.0.1/google-hello-app-logging-multiarch-${CHART_VERSION}.tgz
+        uses: helm/chart-releaser-action@v1.7.0
+        with:
+          charts_dir: charts
+        env:
+          CR_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
