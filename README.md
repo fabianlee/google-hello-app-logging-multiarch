@@ -40,9 +40,18 @@ git tag -d $todel && git push -d origin $todel
 
 ## Deploying to Kubernetes cluster
 
-If you want to test this container image from a Kubernetes cluster, you can use the example manifest provided.
+You can use the simple manifest provided.
 
 ```
+# simple test
 kubectl apply -f golang-hello-world-web-logging.yaml
+```
+
+OR you can use the Helm Chart.
+
+```
+helm repo add github-hello https://fabianlee.github.io/google-hello-app-logging-multiarch
+helm search repo -l github-hello
+helm install my-hello-github-test github-hello/google-hello-app-logging-multiarch
 ```
 
