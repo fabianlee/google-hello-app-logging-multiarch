@@ -14,6 +14,7 @@ spec:
         kind: HelmRepository
         name: github-hello-helm-repo
       interval: 1m
+  releaseName: google-hello-app-logging-multiarch # using default would prepend '<ns>-'
   install:
     remediation:
       retries: 3
