@@ -9,7 +9,7 @@ spec:
   chart:
     spec:
       chart: google-hello-app-logging-multiarch
-      version: '0.0.*' # any 0.0.x version, helm upgrade executed if newer patch ver released
+      version: '0.0.3' # hardcoded, static chart version - no version upgrades
       sourceRef:
         kind: HelmRepository
         name: github-hello-helm-repo
@@ -33,7 +33,7 @@ spec:
     replicaCount: 2
     extraEnvVars:
       - name: whoami
-        value: "patch version 0.0.*" # message added as env var
+        value: "patch version 3" # message added as env var
 
 # https://fluxcd.io/flux/components/helm/helmreleases/#values
 #  valuesFrom:
