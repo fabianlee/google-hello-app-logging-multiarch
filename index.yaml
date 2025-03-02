@@ -3,6 +3,16 @@ entries:
   google-hello-app-logging-multiarch:
   - apiVersion: v2
     appVersion: 1.0.34
+    created: "2025-03-02T19:51:15.024105173Z"
+    description: A Helm chart for Kubernetes
+    digest: 7ac68c894653fcc5319706aa3f27eef304df0fb657c66da6fcf551e01863e2c2
+    name: google-hello-app-logging-multiarch
+    type: application
+    urls:
+    - https://github.com/fabianlee/google-hello-app-logging-multiarch/releases/download/google-hello-app-logging-multiarch-0.0.5/google-hello-app-logging-multiarch-0.0.5.tgz
+    version: 0.0.5
+  - apiVersion: v2
+    appVersion: 1.0.34
     created: "2025-03-02T18:46:59.321817157Z"
     description: A Helm chart for Kubernetes
     digest: d41f23bc746326f3710f0a62142e1315485f9a0196de2645e89af6cd63933d89
@@ -31,4 +41,4 @@ entries:
     urls:
     - https://github.com/fabianlee/google-hello-app-logging-multiarch/releases/download/google-hello-app-logging-multiarch-0.0.1/google-hello-app-logging-multiarch-0.0.1.tgz
     version: 0.0.1
-generated: "2025-03-02T18:46:59.321834409Z"
+generated: "2025-03-02T19:51:15.024120171Z"
