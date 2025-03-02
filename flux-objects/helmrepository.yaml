@@ -1,0 +1,11 @@
+apiVersion: source.toolkit.fluxcd.io/v1
+kind: HelmRepository
+metadata:
+  name: github-hello-helm-repo
+  #namespace: github-hello-helm
+spec:
+  interval: 1m
+  # helm chart published by GitHub Action to public GitHub Pages
+  # https://fabianlee.org/2025/02/26/github-automated-publish-of-helm-chart-using-github-actions/
+  # https://github.com/fabianlee/google-hello-app-logging-multiarch/blob/main/.github/workflows/github-actions-buildOCI.yml
+  url: https://fabianlee.github.io/google-hello-app-logging-multiarch
