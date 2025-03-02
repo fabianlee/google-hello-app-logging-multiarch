@@ -5,6 +5,8 @@ metadata:
   name: golang-hello-world-web-logging
   # allow for override: kubectl -n <ns> apply ...
   #namespace: default
+  labels:
+    this: that
 spec:
   selector:
     matchLabels:
