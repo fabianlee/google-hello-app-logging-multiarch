@@ -6,6 +6,7 @@ The enhancement in this project is building this GoLang app with multiple archit
 
 Also, it logs INFO, WARN, and ERROR level messages every 10 seconds for testing logging systems.  The message it sends can be modified based on passing the environment parameter 'whoAmI'.
 
+
 ## GoLang syntax check
 
 If you have [GoLang installed locally](https://fabianlee.org/2022/10/29/golang-installing-the-go-programming-language-on-ubuntu-22-04/), you can run a local sanity check on the main.go syntax before having the remote pipeline do a full build.
